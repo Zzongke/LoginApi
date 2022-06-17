@@ -18,20 +18,25 @@ app.use(
   jwt({
     secret: process.env.TOKEN_SECRET,
     algorithms: ["HS256"],
-  }).unless({ path: ["/login", "/reguser"] })
+  }).unless({
+    path: ["/login", "/reguser"],
+  })
 );
 
 // router
 app.use("/", require("./router"));
+app.use("/api", require("./router/api/index"));
 
 // 全局错误
 const { ValidationError } = require("express-validation");
 app.use((err, req, res, next) => {
   if (err instanceof ValidationError) {
-    return res.status(err.statusCode).json(err);
+    res.status(err.statusCode).json(err);
+    return;
   }
   if (err.name === "UnauthorizedError") {
     res.status(401).send({ status: 0, msg: "权限未授权" });
+    return;
   }
   res.status(500).send({ status: 0, message: "全局服务器错误" });
 });
