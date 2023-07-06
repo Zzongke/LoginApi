@@ -12,6 +12,6 @@ request.getConnection((err, connection) => {
     return;
   }
   connection.release();
-  console.log("数据库连接成功");
+  console.log("数据库连接成功。。。");
 });
 module.exports = request;
